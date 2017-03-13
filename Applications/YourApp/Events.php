@@ -6,7 +6,7 @@ class Events
 
     public static $client_message = array();
     public static function onConnect($client_id) {
-        self::$client_message[$client_id] = array();
+
     }
     
     public static function onMessage($client_id, $message) {
@@ -14,22 +14,24 @@ class Events
 
         switch($message->type) {
             case 'connect':
-                self::$client_message[$client_id] = array();
-                self::$client_message[$client_id]['name'] = $message->user_name;
+                self::$client_message[$client_id] = $message->user_name;
+
+                $array = array();
+                $array['type'] = 'user-list';
+                $array['content'] = self::$client_message;
+                Gateway::sendToClient($client_id, json_encode($array));
                 break;
 
             case 'sent-to-all':
                 $messageSent = array();
                 $messageSent['type'] = 'message';
-                $messageSent['name'] = self::$client_message[$client_id]['name'];
+                $messageSent['name'] = self::$client_message[$client_id];
                 $messageSent['content'] = $message->content;
                 $messageSent['time'] = date("l jS \of F Y h:i:s A");
                 $messageSent = json_encode($messageSent);
                 Gateway::sendToAll($messageSent);
                 break;
         }
-
-        var_dump(self::$client_message);
     }
    
     public static function onClose($client_id) {
