@@ -6,7 +6,7 @@ class Events
 
     public static $client_message = array();
     public static function onConnect($client_id) {
-
+        
     }
     
     public static function onMessage($client_id, $message) {
@@ -19,7 +19,7 @@ class Events
                 $array = array();
                 $array['type'] = 'user-list';
                 $array['content'] = self::$client_message;
-                Gateway::sendToClient($client_id, json_encode($array));
+                Gateway::sendToAll(json_encode($array));
                 break;
 
             case 'sent-to-all':
@@ -36,5 +36,9 @@ class Events
    
     public static function onClose($client_id) {
         unset(self::$client_message[$client_id]);
+        $array = array();
+        $array['type'] = 'user-list';
+        $array['content'] = self::$client_message;
+        Gateway::sendToAll(json_encode($array));
     }
 }
