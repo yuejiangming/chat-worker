@@ -12,6 +12,8 @@ class Events
     public static function onMessage($client_id, $message) {
         $message = json_decode($message);
 
+        var_dump($message);
+
         switch($message->type) {
             case 'connect':
                 self::$client_message[$client_id] = $message->user_name;
@@ -30,6 +32,17 @@ class Events
                 $messageSent['time'] = date("l jS \of F Y h:i:s A");
                 $messageSent = json_encode($messageSent);
                 Gateway::sendToAll($messageSent);
+                break;
+
+            case 'sent-to-single':
+                $messageSent = array();
+                $messageSent['type'] = 'message-private';
+                $messageSent['name'] = self::$client_message[$client_id];
+                $messageSent['content'] = $message->content;
+                $messageSent['time'] = date("l jS \of F Y h:i:s A");
+                $messageSent = json_encode($messageSent);
+                Gateway::sendToClient($client_id, $messageSent);
+                Gateway::sendToClient($message->target, $messageSent);
                 break;
         }
     }
