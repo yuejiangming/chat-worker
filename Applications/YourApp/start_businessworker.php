@@ -10,7 +10,7 @@ $worker = new BusinessWorker();
 
 $worker->name = 'YourAppBusinessWorker';
 
-$worker->count = 4;
+$worker->count = 1;
 
 $worker->registerAddress = '127.0.0.1:1238';
 

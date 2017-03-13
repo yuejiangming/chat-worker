@@ -7,7 +7,7 @@ use \GatewayWorker\BusinessWorker;
 use \Workerman\Autoloader;
 
 
-$gateway = new Gateway("websocket://0.0.0.0:8282");
+$gateway = new Gateway("websocket://127.0.0.1:8282");
 
 $gateway->name = 'YourAppGateway';
 
